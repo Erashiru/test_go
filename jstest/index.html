@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Currencies</title>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr.green {
+        background-color: green;
+    }
+
+    tr.blue {
+        background-color: blue;
+    }
+</style>
+</head>
+<body>
+    <table id="cryptoTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Symbol</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#cryptoTable tbody');
+                data.forEach((currency, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${currency.id}</td>
+                        <td>${currency.symbol}</td>
+                        <td>${currency.name}</td>
+                    `;
+                    if (currency.symbol === 'usdt') {
+                        tr.classList.add('green');
+                    } else if (index < 5) {
+                        tr.classList.add('blue');
+                    }
+
+                    tableBody.appendChild(tr);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
